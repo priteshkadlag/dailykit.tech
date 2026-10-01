@@ -5,9 +5,7 @@ import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
 import { formatBytes, type AcceptedFile } from "@/lib/files/validation";
 import { canvasCodec, renderPageImages } from "@/lib/pdf/browser";
-import { compressPdfImages } from "@/lib/pdf/compress";
-import { replacePagesWithImages, resavePdf } from "@/lib/pdf/edit";
-import { convertToPdfA } from "@/lib/pdf/pdfa";
+import { pdfA, pdfCompress, pdfEdit } from "@/lib/pdf/lazy";
 import { openPdf } from "@/lib/pdf/pdf-render";
 import { SegmentedControl, TextField } from "@/components/shared/form-fields";
 import { FileDropzone, PrivacyNote } from "@/components/files/file-dropzone";
@@ -49,11 +47,11 @@ function Compressor({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
       if (level === "maximum") {
         const pages = Array.from({ length: pdf.doc.numPages }, (_, i) => i + 1);
         const images = await renderPageImages(pdf.doc, pages, { dpi: 110, quality: LEVELS.maximum.quality, onProgress: (done, total) => setProgress({ label: "Rendering pages…", done, total }) });
-        bytes = await replacePagesWithImages(pdf.bytes, images);
+        bytes = await (await pdfEdit()).replacePagesWithImages(pdf.bytes, images);
         note = "Pages were converted to images.";
       } else {
         const { maxSide, quality } = LEVELS[level];
-        const out = await compressPdfImages(pdf.bytes, { maxSide, quality, codec: canvasCodec, onProgress: (done, total) => setProgress({ label: "Compressing images…", done, total }) });
+        const out = await (await pdfCompress()).compressPdfImages(pdf.bytes, { maxSide, quality, codec: canvasCodec, onProgress: (done, total) => setProgress({ label: "Compressing images…", done, total }) });
         bytes = out.bytes;
         note = out.images === 0 ? "This PDF has no photos to shrink; its structure was optimised." : `${out.recompressed} of ${out.images} image${out.images === 1 ? "" : "s"} were made smaller.`;
       }
@@ -104,7 +102,7 @@ export function RepairPdf() {
     try {
       // 1. Rebuild the file structure, keeping everything (text, links, forms).
       try {
-        const rebuilt = await resavePdf(bytes);
+        const rebuilt = await (await pdfEdit()).resavePdf(bytes);
         const check = await openPdf(new Blob([rebuilt.slice().buffer as ArrayBuffer]));
         const pages = check.doc.numPages;
         await check.destroy();
@@ -175,7 +173,7 @@ function Archiver({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
     setProgress({ label: "Checking fonts…", done: 0, total: 1 });
     try {
       const pages = Array.from({ length: pdf.doc.numPages }, (_, i) => i + 1);
-      const out = await convertToPdfA(pdf.bytes, {
+      const out = await (await pdfA()).convertToPdfA(pdf.bytes, {
         title: title.trim() || baseName(pdf.file),
         forceImages: method === "images",
         renderPages: () => renderPageImages(pdf.doc, pages, { dpi: 200, quality: 0.85, onProgress: (done, total) => setProgress({ label: "Rebuilding pages…", done, total }) }),

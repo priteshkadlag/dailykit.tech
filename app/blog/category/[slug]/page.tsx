@@ -16,8 +16,11 @@ type BlogCategoryPageProps = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: BlogCategoryPageProps): Promise<Metadata> {
   const category = getBlogCategory((await params).slug);
   if (!category) return {};
-  const title = `${category.name} Guides & Articles | DailyKit Blog`;
-  const description = `${category.description} Read clear, practical DailyKit articles with examples and related free tools.`;
+  // Kept within what Google shows: ~60 characters for titles, ~160 for descriptions.
+  const longTitle = `${category.name} Guides & Articles | DailyKit Blog`;
+  const title = longTitle.length <= 60 ? longTitle : `${category.name} Guides | DailyKit Blog`;
+  const longDescription = `${category.description} Read clear, practical DailyKit articles with examples and related free tools.`;
+  const description = longDescription.length <= 160 ? longDescription : `${category.description} Practical DailyKit guides.`.slice(0, 160);
   const path = `/blog/category/${category.slug}`;
   return { title: { absolute: title }, description, alternates: { canonical: path }, openGraph: { type: "website", title, description, url: absoluteUrl(path), siteName: siteConfig.name, locale: siteConfig.locale, images: [{ ...defaultOgImage, alt: `${category.name} guides from DailyKit` }] }, twitter: { card: "summary_large_image", title, description, images: [defaultOgImage.url] } };
 }

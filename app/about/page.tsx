@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { liveTools } from "@/lib/tools";
 import { siteConfig } from "@/lib/site";
@@ -6,11 +7,10 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 
-export const metadata: Metadata = {
-  title: "About",
+export const metadata: Metadata = pageMetadata("/about", {
+  title: "About Us – Free Everyday Tools for India",
   description: `${siteConfig.name} makes simple, free tools for India's shopkeepers, freelancers and small businesses — GST, invoices, EMI, PDFs and more.`,
-  alternates: { canonical: "/about" },
-};
+});
 
 export default function AboutPage() {
   return (

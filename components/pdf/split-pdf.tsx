@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Split } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
-import { chunkPages, splitPdf } from "@/lib/pdf/edit";
+import { chunkPages } from "@/lib/pdf/edit-helpers";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { parsePageRange } from "@/lib/pdf/page-range";
 import { NumberField, SegmentedControl, TextField } from "@/components/shared/form-fields";
 import { ActionButton, baseName, FileBar, PageTile, pageGridClass, pdfBlob, PdfLayout, PdfPicker, PdfResult, type OutputFile } from "./pdf-shell";
@@ -56,7 +57,7 @@ export function SplitPdf() {
     if (plan.error) return;
     setBusy(true);
     try {
-      const parts = await splitPdf(pdf.bytes, plan.groups);
+      const parts = await (await pdfEdit()).splitPdf(pdf.bytes, plan.groups);
       const name = baseName(pdf.file);
       setResult(
         parts.map((bytes, i) => {

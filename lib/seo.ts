@@ -8,12 +8,38 @@ interface ToolSeo {
   description: string;
 }
 
+/**
+ * Canonical, Open Graph and Twitter metadata for a regular page. Without it a page inherits the root
+ * layout's Open Graph block, so shares of e.g. /about would show the homepage's title and URL.
+ */
+export function pageMetadata(path: string, { title, description }: { title: string; description: string }): Metadata {
+  const fullTitle = `${title} | ${siteConfig.name}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { type: "website", url: absoluteUrl(path), title: fullTitle, description, siteName: siteConfig.name, locale: siteConfig.locale, images: [defaultOgImage] },
+    twitter: { card: "summary_large_image", title: fullTitle, description, images: [defaultOgImage.url] },
+  };
+}
+
+/** Google shows roughly the first 60 characters of a title. */
+export const TITLE_LIMIT = 60;
+const brandSuffix = () => ` | ${siteConfig.name}`;
+
+/** True when `title` plus the " | DailyKit" suffix still fits in a search result. */
+export function fitsWithBrand(title: string) {
+  return title.length + brandSuffix().length <= TITLE_LIMIT;
+}
+
 /** Canonical, Open Graph and Twitter metadata for a tool page, keyed off the registry slug. */
 export function toolMetadata(slug: string, { title, description }: ToolSeo): Metadata {
   const tool = getTool(slug);
   const path = `/${tool.slug}`;
+  // Keyword-rich tool titles keep their keywords: the brand suffix is dropped when it would push them past the limit.
+  const fullTitle = fitsWithBrand(title) ? `${title}${brandSuffix()}` : title;
   return {
-    title,
+    title: { absolute: fullTitle },
     description,
     keywords: tool.keywords,
     alternates: { canonical: path },

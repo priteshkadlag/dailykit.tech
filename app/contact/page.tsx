@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Bug, Lightbulb, Mail, Sparkles } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: `Questions, bug reports or ideas for new tools? Email the ${siteConfig.name} team.`,
-  alternates: { canonical: "/contact" },
-};
+export const metadata: Metadata = pageMetadata("/contact", {
+  title: "Contact Us – Questions, Bugs and Tool Ideas",
+  description: `Questions, bug reports or ideas for new tools? Email the ${siteConfig.name} team — we read every message and usually reply within one working day.`,
+});
 
 const reasons = [
   { icon: Bug, title: "Report a problem", text: "Tell us which tool, what you entered and what you expected. A screenshot helps." },

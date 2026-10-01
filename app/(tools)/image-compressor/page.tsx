@@ -5,10 +5,10 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "image-compressor";
 const description =
-  "Reduce JPG, PNG and WEBP file size without visible loss. Compress many photos at once, see the size before and after, and download them individually or as a ZIP. Nothing is uploaded.";
+  "Reduce JPG, PNG and WEBP file size without visible loss. Compress many photos at once, compare sizes and download singly or as a ZIP. No upload.";
 
 export const metadata = toolMetadata(slug, {
-  title: "Image Compressor – Reduce Photo Size in KB Online (No Upload)",
+  title: "Image Compressor – Reduce Photo Size in KB (No Upload)",
   description,
 });
 

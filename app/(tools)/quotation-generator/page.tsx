@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "quotation-generator";
 const description =
-  "Make professional quotations and estimates with your logo, item-wise discounts and GST, validity date and terms. Download as PDF, print, and turn an accepted quotation into an invoice in one click.";
+  "Make quotations and estimates with your logo, item discounts, GST, validity and terms. Download as PDF and turn an accepted quote into an invoice.";
 
 export const metadata = toolMetadata(slug, {
   title: "Quotation Generator – Free Quotation & Estimate PDF Maker",

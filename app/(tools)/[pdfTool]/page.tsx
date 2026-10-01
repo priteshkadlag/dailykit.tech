@@ -22,7 +22,7 @@ import { getFontConverter, liveFontConverters, type FontConverter } from "@/lib/
 import { getKeyboard, keyboards } from "@/lib/keyboard-data";
 import { devTools, getDevTool } from "@/lib/dev-tools/registry";
 import { DevToolRenderer } from "@/components/dev-tools/renderer";
-import { toolMetadata } from "@/lib/seo";
+import { fitsWithBrand, toolMetadata } from "@/lib/seo";
 
 interface Definition {
   heading: string;
@@ -246,7 +246,8 @@ const lockedFaq: Faq = {
 
 function converterDescription(converter: FontConverter) {
   if (converter.language === "English") return `Convert ${converter.from.label} spelling to ${converter.to.label} instantly — colour ⇄ color, organise ⇄ organize, centre ⇄ center and hundreds more.`;
-  return `Convert ${converter.from.label} text to ${converter.to.label} (${converter.language}) online, free and instantly. Your text is converted in your browser and never uploaded.`;
+  // Built from the converter's name, which is unique (two converters can share font labels, e.g. Krutidev and Krutidev 010).
+  return `Free ${converter.name} converter for ${converter.language}: paste your text and convert it instantly. It runs in your browser, so your text is never uploaded.`;
 }
 
 function converterFaqs(converter: FontConverter): Faq[] {
@@ -285,8 +286,11 @@ export async function generateMetadata({ params }: PageProps<"/[pdfTool]">) {
   const keyboard = getKeyboard(pdfTool);
   const converter = getFontConverter(pdfTool);
   const devTool = getDevTool(pdfTool);
-  if (devTool) return toolMetadata(pdfTool, { title: `${devTool.heading} – Free Online Tool`, description: devTool.description });
-  if (converter?.live) return toolMetadata(pdfTool, { title: `${converter.name} Converter – Free Online${converter.language === "English" ? "" : ` (${converter.language})`}`, description: converterDescription(converter) });
+  if (devTool) {
+    const withSuffix = `${devTool.heading} – Free Online Tool`;
+    return toolMetadata(pdfTool, { title: fitsWithBrand(withSuffix) ? withSuffix : devTool.heading, description: devTool.description });
+  }
+  if (converter?.live) return toolMetadata(pdfTool, { title: `Free ${converter.name} Converter${converter.language === "English" ? "" : ` (${converter.language})`}`, description: converterDescription(converter) });
   if (keyboard) return toolMetadata(pdfTool, { title: `${keyboard.name} – Type ${keyboard.language} Online`, description: `Type ${keyboard.language} online using a visual ${keyboard.name} with formatting, copy, print, TXT and DOC export.` });
   if (!definition) return {};
   return toolMetadata(pdfTool, {

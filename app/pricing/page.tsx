@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { FaqSection, type Faq } from "@/components/shared/faq-section";
 import { JsonLd } from "@/components/shared/json-ld";
 import { PricingPlans } from "@/components/shared/pricing-plans";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata("/pricing", {
   title: "Pricing – Free and Pro Plans",
   description: `Every ${siteConfig.name} tool is free. Pro (₹99/month or ₹999/year) adds unlimited invoices and quotations saved to your account.`,
-  alternates: { canonical: "/pricing" },
-};
+});
 
 const faqs: Faq[] = [
   { question: "Are the calculators really free?", answer: "Yes. Every calculator, PDF, image, QR and WhatsApp tool is free to use, with or without an account." },

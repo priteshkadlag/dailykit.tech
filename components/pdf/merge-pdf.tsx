@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp, FileText, Merge, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
 import { formatBytes, type AcceptedFile } from "@/lib/files/validation";
-import { mergePdfs } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { openPdf } from "@/lib/pdf/pdf-render";
 import { Button } from "@/components/ui/button";
 import { FileDropzone, PrivacyNote } from "@/components/files/file-dropzone";
@@ -57,7 +57,7 @@ export function MergePdf() {
     }
     setBusy(true);
     try {
-      const bytes = await mergePdfs(await Promise.all(items.map(async (i) => new Uint8Array(await i.file.arrayBuffer()))));
+      const bytes = await (await pdfEdit()).mergePdfs(await Promise.all(items.map(async (i) => new Uint8Array(await i.file.arrayBuffer()))));
       setResult({ name: "merged.pdf", blob: pdfBlob(bytes) });
       toast.success(`Merged ${items.length} PDFs.`);
       track("pdf_generated");

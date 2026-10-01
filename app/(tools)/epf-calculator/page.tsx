@@ -4,7 +4,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 import { toolMetadata } from "@/lib/seo";
 
 const slug = "epf-calculator";
-const description = "Project your Employees' Provident Fund balance at retirement from your basic salary, with the employer share, the EPS pension split, salary hikes and the 8.25% EPF interest rate.";
+const description = "Project your EPF balance at retirement from your basic salary, with the employer share, EPS pension split, salary hikes and the 8.25% interest rate.";
 export const metadata = toolMetadata(slug, { title: "EPF Calculator – PF Balance at Retirement", description });
 const faqs: Faq[] = [
   { question: "How much goes into my EPF each month?", answer: "You contribute 12% of basic pay plus DA. Your employer also pays 12%, but 8.33% of wages (on a wage of at most ₹15,000, so up to ₹1,250 a month) goes to the Employees' Pension Scheme; the rest goes into your EPF account." },

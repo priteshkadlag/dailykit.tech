@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Ban, Cookie, HardDrive, Mail, ShieldCheck, Trash2 } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { AnalyticsChoice } from "@/components/privacy/analytics-choice";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: `How ${siteConfig.name} handles your data: most tools run in your browser, files are never uploaded, there are no ads or tracking cookies, and usage stats are anonymous.`,
-  alternates: { canonical: "/privacy" },
-};
+export const metadata: Metadata = pageMetadata("/privacy", {
+  title: "Privacy Policy – Your Files Stay on Your Device",
+  description: `How ${siteConfig.name} handles your data: tools run in your browser, files are never uploaded, and you control statistics and ad personalisation.`,
+});
 
 const UPDATED = "1 October 2026";
 
 const highlights = [
   { icon: HardDrive, title: "Your files stay on your device", text: "PDF, image, QR, text and calculator tools work inside your browser. We never receive your files or inputs." },
-  { icon: Ban, title: "No ads, no selling", text: "We don't show ads, sell data or share it with advertisers or data brokers." },
-  { icon: Cookie, title: "No tracking cookies", text: "No advertising, analytics or third-party tracking cookies — ever." },
-  { icon: ShieldCheck, title: "Anonymous statistics only", text: "We count tool usage with a random ID — no names, inputs or files — and you can switch it off below." },
+  { icon: Ban, title: "We never sell your data", text: "Your files and what you type are never shared with anyone — including advertisers or data brokers." },
+  { icon: Cookie, title: "Ads keep the tools free", text: "Google ads support the free tools. Pro accounts see no ads at all." },
+  { icon: ShieldCheck, title: "One switch, your choice", text: "Turn off statistics and personalised ads below. Your inputs and files are never included either way." },
 ];
 
 const sections = [
@@ -25,7 +25,8 @@ const sections = [
   ["on-device", "Tools that run on your device"],
   ["online-tools", "Tools that connect to the internet"],
   ["browser-storage", "What we keep in your browser"],
-  ["statistics", "Anonymous usage statistics"],
+  ["statistics", "Usage statistics and Google Analytics"],
+  ["advertising", "Advertising (Google AdSense)"],
   ["server", "Server logs and abuse protection"],
   ["accounts", "Accounts"],
   ["cookies", "Cookies"],
@@ -143,21 +144,59 @@ export default function PrivacyPage() {
           </div>
           <p>Anything you save this way exists only in that browser on that device. If you clear it, or use another device, it&apos;s gone — so download important invoices as PDF.</p>
 
-          <h2 id="statistics">5. Anonymous usage statistics</h2>
-          <p>To learn which tools are useful and what to improve, we record simple events such as “GST calculator opened”, “calculation completed” or “PDF downloaded”. Each event contains only:</p>
-          <ul>
-            <li>the event name and the tool it happened on;</li>
-            <li>a random ID created in your browser (not linked to your name, email or account);</li>
-            <li>the time it was recorded.</li>
-          </ul>
+          <h2 id="statistics">5. Usage statistics and Google Analytics</h2>
+          <p>To learn which tools are useful and what to improve, we use two kinds of statistics.</p>
           <p>
-            Events <strong>never</strong> include what you typed, your files, results, names, phone numbers or amounts. We don&apos;t use third-party analytics (such as Google
-            Analytics), advertising pixels or fingerprinting. Nothing is recorded if your browser sends Do Not Track or Global Privacy Control. You can switch statistics
-            off for this browser here:
+            <strong>Our own tool counts.</strong> We record simple events such as “GST calculator opened”, “calculation completed” or “PDF downloaded”. Each event contains
+            only the event name, the tool, a random ID created in your browser (not linked to your name, email or account) and the time.
+          </p>
+          <p>
+            <strong>Google Analytics, through Google Tag Manager.</strong> These Google services measure visits: which pages are viewed, how people arrive (for example from a
+            search engine), and general information such as device type, browser, approximate location (country or city, derived from your IP address) and how long a
+            visit lasts. Google Analytics sets cookies (such as <code>_ga</code>) to recognise a returning browser. Google processes this data under its own{" "}
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>; see also{" "}
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses data from sites that use its services</a>.
+            We don&apos;t use Google Analytics for advertising.
+          </p>
+          <p>
+            Neither kind <strong>ever</strong> includes what you typed, your files, results, names, phone numbers or amounts — those stay on your device. Neither runs if your
+            browser sends Do Not Track or Global Privacy Control. One switch turns both off for this browser and also limits ads to non-personalised ones (see{" "}
+            <a href="#advertising">section 6</a>). Changes apply from your next page view:
           </p>
           <AnalyticsChoice />
 
-          <h2 id="server">6. Server logs and abuse protection</h2>
+          <h2 id="advertising">6. Advertising (Google AdSense)</h2>
+          <p>
+            To keep the tools free, {siteConfig.name} shows ads served by Google AdSense. Accounts on the Pro plan see no ads. Ads never receive your files, what you type
+            into a tool, or your results — those stay on your device.
+          </p>
+          <ul>
+            <li>
+              Google and its partners use cookies (such as <code>__gads</code>, <code>__gpi</code> and <code>IDE</code>) or similar technologies to serve ads, limit how often
+              you see the same ad, measure ad performance and prevent fraud.
+            </li>
+            <li>
+              Third-party vendors, including Google, may use these cookies to show you ads based on your previous visits to this and other websites (“personalised ads”).
+              Google&apos;s advertising cookies let it and its partners serve ads based on your visits here and elsewhere on the internet.
+            </li>
+            <li>
+              You can opt out of personalised advertising in Google&apos;s{" "}
+              <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">My Ad Center</a>, and from many other ad companies at{" "}
+              <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer">aboutads.info</a>. On this site, switching statistics off in section 5 (or a
+              browser sending Do Not Track or Global Privacy Control) also means you only get non-personalised ads, which use cookies only for frequency capping,
+              measurement and fraud prevention.
+            </li>
+            <li>
+              Visitors in the European Economic Area, the UK and Switzerland are asked for consent through Google&apos;s consent message before personalised ads are shown.
+            </li>
+          </ul>
+          <p>
+            Learn more in{" "}
+            <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">how Google uses cookies in advertising</a> and{" "}
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses information from sites that use its services</a>.
+          </p>
+
+          <h2 id="server">7. Server logs and abuse protection</h2>
           <p>
             Like every website, our hosting provider receives technical information when your browser loads a page — your IP address, browser type, the page requested and
             the time. This is used to deliver the site, keep it secure and fix errors, and is not used to profile you.
@@ -167,7 +206,7 @@ export default function PrivacyPage() {
             the IP address or email, never the address itself, and they reset within an hour.
           </p>
 
-          <h2 id="accounts">7. Accounts</h2>
+          <h2 id="accounts">8. Accounts</h2>
           <p>
             Public sign-up is currently closed and you don&apos;t need an account to use any tool. For accounts that already exist (for example our editors), we store:
           </p>
@@ -179,30 +218,45 @@ export default function PrivacyPage() {
           </ul>
           <p>Saved items are tied to your account, so only you can see them. You can ask us to delete your account and everything in it at any time.</p>
 
-          <h2 id="cookies">8. Cookies</h2>
-          <p>
-            We don&apos;t use advertising, analytics or third-party tracking cookies. The only cookies {siteConfig.name} sets are the essential ones that keep a signed-in
-            account signed in (for up to 30 days) and protect the login form. If you never sign in, you don&apos;t need them. Because these cookies are strictly
-            necessary, there is no cookie banner.
-          </p>
+          <h2 id="cookies">9. Cookies</h2>
+          <p>We use three kinds of cookies:</p>
+          <ul>
+            <li>
+              <strong>Essential cookies</strong> keep a signed-in account signed in (for up to 30 days) and protect the login form. If you never sign in, you don&apos;t
+              need them.
+            </li>
+            <li>
+              <strong>Statistics cookies</strong> from Google Analytics (such as <code>_ga</code> and <code>_ga_*</code>, kept for up to 2 years) recognise a returning
+              browser so visits can be counted. They are not set if you switch statistics off in <a href="#statistics">section 5</a> or your browser sends Do Not Track or
+              Global Privacy Control. You can also delete them in your browser settings at any time.
+            </li>
+            <li>
+              <strong>Advertising cookies</strong> from Google AdSense and its partners (such as <code>__gads</code>, <code>__gpi</code> and <code>IDE</code>, typically kept
+              for up to 13 months) serve and measure ads, as described in <a href="#advertising">section 6</a>. They aren&apos;t used for Pro accounts, and are limited to
+              non-personalised ads if you switch statistics off.
+            </li>
+          </ul>
 
-          <h2 id="sharing">9. Who we share data with</h2>
-          <p>We do not sell, rent or trade personal data. We share it only:</p>
+          <h2 id="sharing">10. Who we share data with</h2>
+          <p>We do not sell, rent or trade personal data for money. We share data only:</p>
           <ul>
             <li><strong>with service providers</strong> that run the site for us — website hosting, our database and our email service (for password-reset emails) — who may only use it to provide that service;</li>
+            <li><strong>with Google</strong>, for the visit statistics described in section 5 (unless you switch them off) and the ads described in section 6;</li>
             <li><strong>with the services listed in section 3</strong>, and only when you use those tools;</li>
             <li><strong>when the law requires it</strong>, for example a valid request from a court or government authority, or to protect the safety of our users and the site.</li>
           </ul>
 
-          <h2 id="retention">10. How long we keep data</h2>
+          <h2 id="retention">11. How long we keep data</h2>
           <ul>
             <li><strong>Browser storage:</strong> until you delete it or clear your browser&apos;s site data.</li>
             <li><strong>Account data:</strong> until you delete the item, or until you ask us to delete the account.</li>
-            <li><strong>Usage statistics:</strong> kept only as long as they are useful for understanding which tools people use. They can&apos;t identify you.</li>
+            <li><strong>Our own tool counts:</strong> kept only as long as they are useful for understanding which tools people use. They can&apos;t identify you.</li>
+            <li><strong>Google Analytics:</strong> kept by Google for the retention period set in our Analytics account (Google&apos;s default is 2 months, up to 14 months).</li>
+            <li><strong>Advertising data:</strong> kept by Google under its own policies; advertising cookies typically expire after up to 13 months.</li>
             <li><strong>Abuse-protection counters:</strong> reset within an hour. <strong>Password-reset links:</strong> 60 minutes.</li>
           </ul>
 
-          <h2 id="rights">11. Your choices and rights</h2>
+          <h2 id="rights">12. Your choices and rights</h2>
           <p>
             You can use every tool without giving us any personal information. Under India&apos;s Digital Personal Data Protection Act, 2023 and similar laws, you can ask
             us to:
@@ -218,26 +272,26 @@ export default function PrivacyPage() {
             we can, within 30 days at the latest.
           </p>
 
-          <h2 id="children">12. Children</h2>
+          <h2 id="children">13. Children</h2>
           <p>
             The tools are safe for anyone to use without an account. Accounts are not meant for children under 18, and we don&apos;t knowingly collect their personal data. If
             you think a child has given us personal data, email us and we&apos;ll delete it.
           </p>
 
-          <h2 id="security">13. Security</h2>
+          <h2 id="security">14. Security</h2>
           <p>
             The site is served over encrypted HTTPS. Passwords are hashed with bcrypt and never stored in readable form. Login attempts are rate-limited, signing out
             everywhere ends all sessions, and every saved record is checked against its owner before it&apos;s shown. Raw HTML in blog posts is blocked to prevent harmful
             scripts. No system is perfectly secure, but we work to protect what little data we hold.
           </p>
 
-          <h2 id="changes">14. Changes to this policy</h2>
+          <h2 id="changes">15. Changes to this policy</h2>
           <p>
             If we change how we handle data, we&apos;ll update this page and the “Last updated” date at the top. For significant changes, such as a new kind of data we collect,
             we&apos;ll make it clearly visible on the site before it applies.
           </p>
 
-          <h2 id="contact">15. Contact and grievances</h2>
+          <h2 id="contact">16. Contact and grievances</h2>
           <p>Questions, requests or complaints about privacy — including grievances under the DPDP Act — can be sent to:</p>
           <div className="not-prose flex flex-col gap-4 rounded-2xl bg-card p-5 ring-1 ring-primary/20 sm:flex-row sm:items-center">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand"><Mail className="size-5" aria-hidden /></span>

@@ -4,7 +4,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 import { toolMetadata } from "@/lib/seo";
 
 const slug = "mutual-fund-calculator";
-const description = "Estimate the future value of mutual fund investments by monthly SIP, step-up SIP or lump sum, with a year-by-year table and the value in today's money after inflation.";
+const description = "Estimate mutual fund returns for monthly SIP, step-up SIP or lump sum, with a year-by-year table and the value in today's money after inflation.";
 export const metadata = toolMetadata(slug, { title: "Mutual Fund Calculator – SIP, Step-up SIP & Lump Sum Returns", description });
 const faqs: Faq[] = [
   { question: "How are mutual fund returns calculated?", answer: "SIP instalments are invested at the start of each month and grow at the monthly equivalent of your expected annual return. A lump sum compounds monthly over the whole period." },

@@ -5,7 +5,7 @@ import { WhatsappGenerator } from "@/components/whatsapp/whatsapp-generator";
 
 const slug = "whatsapp-message-generator";
 const description =
-  "Ready-to-send WhatsApp messages for order confirmations, payment reminders, delivery updates, appointments, follow-ups, birthdays and festivals. Fill in the details, edit if you like, and open WhatsApp in one tap.";
+  "Ready-to-send WhatsApp messages for orders, payment reminders, deliveries, appointments, follow-ups and festivals. Fill in details and send in one tap.";
 
 export const metadata = toolMetadata(slug, {
   title: "WhatsApp Message Generator – Business Message Templates",

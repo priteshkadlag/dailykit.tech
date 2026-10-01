@@ -5,7 +5,9 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
-import { fillForm, isStandardFontText, readFormFields, type FormField } from "@/lib/pdf/edit";
+import { isStandardFontText } from "@/lib/pdf/edit-helpers";
+import type { FormField } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { CheckboxField, SelectField, TextAreaField, TextField } from "@/components/shared/form-fields";
 import { ActionButton, baseName, FileBar, pdfBlob, PdfPicker, PdfResult, type OutputFile } from "./pdf-shell";
 import { usePdf, type LoadedPdf } from "./use-pdf";
@@ -32,7 +34,7 @@ function FormEditor({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
 
   useEffect(() => {
     let cancelled = false;
-    readFormFields(pdf.bytes)
+    pdfEdit().then((m) => m.readFormFields(pdf.bytes))
       .then((list) => {
         if (cancelled) return;
         setFields(list);
@@ -60,7 +62,7 @@ function FormEditor({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
   const save = async () => {
     setBusy(true);
     try {
-      const bytes = await fillForm(pdf.bytes, values, flatten);
+      const bytes = await (await pdfEdit()).fillForm(pdf.bytes, values, flatten);
       setResult([{ name: `${baseName(pdf.file)}-${flatten ? "filled-flattened" : "filled"}.pdf`, blob: pdfBlob(bytes) }]);
       track("pdf_generated");
       toast.success("Your filled form is ready.");

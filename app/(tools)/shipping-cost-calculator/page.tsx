@@ -5,10 +5,10 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "shipping-cost-calculator";
 const description =
-  "Estimate courier charges for any parcel in India. Calculates volumetric and chargeable weight, freight by zone, COD charges, GST and packaging — with a rate card you can edit to match your courier.";
+  "Estimate courier charges in India: volumetric and chargeable weight, zone freight, COD, GST and packaging — with a rate card you can edit.";
 
 export const metadata = toolMetadata(slug, {
-  title: "Shipping Cost Calculator – Volumetric Weight & Courier Charges India",
+  title: "Shipping Cost Calculator – Volumetric Weight & Courier",
   description,
 });
 

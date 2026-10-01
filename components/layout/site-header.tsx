@@ -1,21 +1,25 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { ChevronRight, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { categories, getToolsInCategory } from "@/lib/tools";
+import type { NavSummary } from "@/lib/menus";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from "@/components/layout/logo";
 import { useToolSearch } from "@/components/layout/search-dialog";
-import { ToolIcon } from "@/components/shared/tool-icon";
 import { AccountMenu, signOutAndReload } from "@/components/layout/account-menu";
 import { useAccount } from "@/lib/account/client";
-import { MENUS, MegaMenuBar, ToolLink, categorySections } from "@/components/layout/mega-menu";
+import { MegaMenuBar } from "@/components/layout/mega-menu";
 
-const categoryBySlug = new Map(categories.map((c) => [c.slug, c]));
+// Needs the full tool registry, so it's fetched only when the phone menu is first opened.
+const MobileMenuCategories = dynamic(() => import("@/components/layout/menu-content").then((m) => m.MobileMenuCategories), {
+  ssr: false,
+  loading: () => <p className="px-3 py-6 text-sm text-muted-foreground">Loading tools…</p>,
+});
 
-export function SiteHeader() {
+export function SiteHeader({ nav }: { nav: NavSummary }) {
   const { open } = useToolSearch();
 
   return (
@@ -57,12 +61,7 @@ export function SiteHeader() {
                 <SheetTitle>Browse tools</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4 pb-6" aria-label="Categories">
-                {MENUS.map((menu) => (
-                  <div key={menu.id} className="mb-2">
-                    <p className="px-3 pt-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{menu.label}</p>
-                    {menu.categories.map((slug) => <SheetCategory key={slug} slug={slug} />)}
-                  </div>
-                ))}
+                <MobileMenuCategories />
                 <div className="my-3 border-t" />
                 <Link href="/tools" className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-muted">
                   All tools
@@ -80,7 +79,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <MegaMenuBar />
+      <MegaMenuBar nav={nav} />
     </header>
   );
 }
@@ -101,30 +100,5 @@ function SheetAccountLinks() {
         Log out
       </button>
     </>
-  );
-}
-
-/** A category in the phone menu that expands to list its tools. */
-function SheetCategory({ slug }: { slug: (typeof MENUS)[number]["categories"][number] }) {
-  const category = categoryBySlug.get(slug)!;
-  const count = getToolsInCategory(slug).length;
-  return (
-    <details className="group rounded-lg open:bg-muted/50">
-      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 rounded-lg px-3 text-sm font-medium hover:bg-muted [&::-webkit-details-marker]:hidden">
-        <ToolIcon name={category.icon} className="size-4 text-muted-foreground" />
-        <span className="flex-1">{category.name}</span>
-        <span className="text-xs text-muted-foreground tabular-nums">{count}</span>
-        <ChevronRight className="size-4 text-muted-foreground transition-transform group-open:rotate-90" aria-hidden />
-      </summary>
-      <div className="px-2 pb-2">
-        {categorySections(slug).map((section) => (
-          <div key={section.name ?? "all"}>
-            {section.name && <p className="px-2 pt-2 pb-0.5 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">{section.name}</p>}
-            {section.tools.map((tool) => <ToolLink key={tool.slug} tool={tool} compact />)}
-          </div>
-        ))}
-        <Link href={`/category/${slug}`} className="flex min-h-10 items-center px-2 text-sm font-medium text-primary">View {category.name} →</Link>
-      </div>
-    </details>
   );
 }

@@ -4,7 +4,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 import { toolMetadata } from "@/lib/seo";
 
 const slug = "whatsapp-direct-link";
-const description = "Open a WhatsApp chat with any phone number without saving it to your contacts. Create a wa.me click-to-chat link with an optional pre-filled message and QR code.";
+const description = "Open a WhatsApp chat with any number without saving it to contacts. Create a wa.me click-to-chat link with a pre-filled message and QR code.";
 export const metadata = toolMetadata(slug, { title: "WhatsApp Direct Link – Chat Without Saving the Number", description });
 const faqs: Faq[] = [
   { question: "How do I message someone on WhatsApp without saving their number?", answer: "Enter their number, tap 'Open chat', and WhatsApp opens a conversation with them directly — no contact needed." },

@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "pdf-to-image";
 const description =
-  "Convert PDF pages to high-quality JPG or PNG images. Pick the pages, resolution and quality, then download pages one by one or all together as a ZIP — processed in your browser, never uploaded.";
+  "Convert PDF pages to high-quality JPG or PNG. Choose pages, resolution and quality, then download one by one or as a ZIP — never uploaded.";
 
 export const metadata = toolMetadata(slug, {
   title: "PDF to Image Converter – PDF to JPG / PNG Free (No Upload)",

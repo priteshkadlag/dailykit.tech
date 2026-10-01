@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "DailyKit",
-  title: "DailyKit – Daily Utility & Business Tools",
+  title: "DailyKit – Free GST, EMI, PDF & Business Tools for India",
   tagline: "Simple tools for everyday work.",
   description:
-    "Free online GST, EMI, percentage, discount and age calculators, invoice tools and more — built for Indian shopkeepers, freelancers, small businesses and everyday users.",
+    "Free GST, EMI, income tax and percentage calculators, invoice maker, PDF and image tools — built for Indian shopkeepers, freelancers and small businesses.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, ""),
   locale: "en_IN",
   /** Shown on the contact, pricing and privacy pages. */

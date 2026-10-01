@@ -9,6 +9,11 @@ import { SearchProvider } from "@/components/layout/search-dialog";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { JsonLd } from "@/components/shared/json-ld";
+import { GoogleTagManager } from "@/components/analytics/google-tag-manager";
+import { GTM_ENABLED, GTM_ID } from "@/lib/analytics/gtm";
+import { getNavSummary } from "@/lib/nav-summary";
+import { AdSense } from "@/components/ads/adsense";
+import { ADSENSE_CLIENT } from "@/lib/ads";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
@@ -29,6 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: siteConfig.title, description: siteConfig.description },
   formatDetection: { telephone: false },
+  // AdSense site verification (Google reads it from the HTML; the ad script itself loads lazily).
+  ...(ADSENSE_CLIENT ? { other: { "google-adsense-account": ADSENSE_CLIENT } } : {}),
 };
 
 export const viewport: Viewport = {
@@ -41,11 +48,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col pb-16 md:pb-0">
+        {GTM_ENABLED && (
+          <noscript>
+            <iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`} height="0" width="0" style={{ display: "none", visibility: "hidden" }} title="Google Tag Manager" />
+          </noscript>
+        )}
+        <GoogleTagManager />
+        <AdSense />
         <SearchProvider>
           <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-card focus:px-3 focus:py-2">
             Skip to content
           </a>
-          <SiteHeader />
+          <SiteHeader nav={getNavSummary()} />
           <main id="main" className="flex-1">
             {children}
           </main>
@@ -65,11 +79,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             name: siteConfig.name,
             url: siteConfig.url,
             publisher: { "@id": `${siteConfig.url}#organization` },
-            potentialAction: {
-              "@type": "SearchAction",
-              target: { "@type": "EntryPoint", urlTemplate: `${absoluteUrl("/search")}?q={search_term_string}` },
-              "query-input": "required name=search_term_string",
-            },
           },
           {
             "@context": "https://schema.org",
@@ -77,7 +86,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             "@id": `${siteConfig.url}#organization`,
             name: siteConfig.name,
             url: siteConfig.url,
-            logo: absoluteUrl("/favicon.ico"),
+            logo: absoluteUrl("/icon"),
           },
           ]}
         />

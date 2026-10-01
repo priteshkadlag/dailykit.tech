@@ -4,7 +4,8 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, Copy, FilePlus2, RotateCcw, RotateCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
-import { buildFromPages, splitPdf, type PagePlan } from "@/lib/pdf/edit";
+import type { PagePlan } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { parsePageRange } from "@/lib/pdf/page-range";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -124,10 +125,10 @@ function PageEditor({ mode, pdf, reset }: { mode: PageToolMode; pdf: LoadedPdf; 
       const name = baseName(pdf.file);
       if (mode === "extract" && separate === "separate") {
         const pages = [...selected].sort((a, b) => a - b);
-        const files = await splitPdf(pdf.bytes, pages.map((p) => [p]));
+        const files = await (await pdfEdit()).splitPdf(pdf.bytes, pages.map((p) => [p]));
         setResult(files.map((bytes, i) => ({ name: `${name}-page-${pages[i]}.pdf`, blob: pdfBlob(bytes) })));
       } else {
-        const bytes = await buildFromPages(pdf.bytes, plan());
+        const bytes = await (await pdfEdit()).buildFromPages(pdf.bytes, plan());
         const suffix = { organize: "organized", remove: "pages-removed", extract: "extracted", rotate: "rotated" }[mode];
         setResult([{ name: `${name}-${suffix}.pdf`, blob: pdfBlob(bytes) }]);
       }

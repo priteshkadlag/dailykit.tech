@@ -5,7 +5,7 @@ import { Search, Square, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
 import { renderPageImages } from "@/lib/pdf/browser";
-import { replacePagesWithImages } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { findInFragments, pageFragments } from "@/lib/pdf/text";
 import { Button } from "@/components/ui/button";
 import { SegmentedControl, TextField } from "@/components/shared/form-fields";
@@ -79,7 +79,7 @@ function Redactor({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
           for (const b of boxes) if (b.page === p && b.kind === "box") ctx.fillRect(b.x, b.y, b.width, b.height);
         },
       });
-      const bytes = await replacePagesWithImages(pdf.bytes, images);
+      const bytes = await (await pdfEdit()).replacePagesWithImages(pdf.bytes, images);
       setResult([{ name: `${baseName(pdf.file)}-redacted.pdf`, blob: pdfBlob(bytes) }]);
       track("pdf_generated");
       toast.success("Redacted PDF is ready.");

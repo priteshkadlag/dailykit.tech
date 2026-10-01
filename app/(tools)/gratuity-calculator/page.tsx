@@ -4,7 +4,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 import { toolMetadata } from "@/lib/seo";
 
 const slug = "gratuity-calculator";
-const description = "Calculate your gratuity with the 15/26 formula under the Payment of Gratuity Act, including the 5-year rule, the ₹20 lakh tax-free limit and the new labour code wage rule.";
+const description = "Calculate gratuity with the 15/26 formula under the Gratuity Act — with the 5-year rule, ₹20 lakh tax-free limit and the new labour code wage rule.";
 export const metadata = toolMetadata(slug, { title: "Gratuity Calculator – 15/26 Formula & Tax-Free Limit", description });
 const faqs: Faq[] = [
   { question: "What is the gratuity formula?", answer: "For employers covered by the Payment of Gratuity Act: 15 × last drawn monthly wages × years of service ÷ 26. Wages mean basic pay plus dearness allowance. For employers not covered by the Act it's half a month's average wages (last 10 months) for each completed year." },

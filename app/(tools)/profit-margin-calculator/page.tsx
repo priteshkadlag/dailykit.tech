@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "profit-margin-calculator";
 const description =
-  "Work out your real profit after purchase cost, shipping, packaging, payment gateway fees and marketing. See margin, markup, cost per unit, break-even price and the selling price you need for a target profit.";
+  "Find your real profit after cost, shipping, packaging, gateway fees and marketing. See margin, markup, break-even and the price for a target profit.";
 
 export const metadata = toolMetadata(slug, {
   title: "Profit Margin Calculator – Margin, Markup & Selling Price",

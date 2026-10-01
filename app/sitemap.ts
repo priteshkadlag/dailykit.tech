@@ -6,39 +6,28 @@ import { getAllPosts } from "@/lib/blog-store";
 
 export const revalidate = 300;
 
+const date = (day: string) => new Date(`${day}T00:00:00Z`);
+const newest = (days: string[]) => (days.length ? date(days.reduce((a, b) => (a > b ? a : b))) : undefined);
+
+/**
+ * Only real dates are given as lastModified (blog posts and the listings they change). Tool and static
+ * pages leave it out: stamping them with the deploy time teaches Google to ignore the whole sitemap's dates.
+ * priority / changefreq are omitted because Google ignores them.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const lastModified = new Date();
   const posts = await getAllPosts();
   return [
-    { url: absoluteUrl("/"), lastModified, changeFrequency: "weekly", priority: 1 },
-    { url: absoluteUrl("/tools"), lastModified, changeFrequency: "weekly", priority: 0.8 },
-    { url: absoluteUrl("/blog"), lastModified, changeFrequency: "weekly", priority: 0.8 },
-    { url: absoluteUrl("/pricing"), lastModified, changeFrequency: "monthly", priority: 0.5 },
-    ...["/about", "/contact", "/privacy"].map((path) => ({ url: absoluteUrl(path), lastModified, changeFrequency: "yearly" as const, priority: 0.3 })),
-    ...categories.map((c) => ({
-      url: absoluteUrl(`/category/${c.slug}`),
-      lastModified,
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    })),
+    { url: absoluteUrl("/") },
+    { url: absoluteUrl("/tools") },
+    { url: absoluteUrl("/blog"), lastModified: newest(posts.map((p) => p.updatedAt)) },
+    ...["/pricing", "/about", "/contact", "/privacy"].map((path) => ({ url: absoluteUrl(path) })),
+    ...categories.map((c) => ({ url: absoluteUrl(`/category/${c.slug}`) })),
     ...blogCategories.map((category) => ({
       url: absoluteUrl(`/blog/category/${category.slug}`),
-      lastModified,
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
+      lastModified: newest(posts.filter((p) => p.category === category.slug).map((p) => p.updatedAt)),
     })),
-    ...posts.map((post) => ({
-      url: absoluteUrl(`/blog/${post.slug}`),
-      lastModified: new Date(`${post.publishedAt}T00:00:00Z`),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
+    ...posts.map((post) => ({ url: absoluteUrl(`/blog/${post.slug}`), lastModified: date(post.updatedAt) })),
     // Only tools that are live — "coming soon" tools have no page yet.
-    ...liveTools.map((t) => ({
-      url: absoluteUrl(`/${t.slug}`),
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: 0.9,
-    })),
+    ...liveTools.map((t) => ({ url: absoluteUrl(`/${t.slug}`) })),
   ];
 }

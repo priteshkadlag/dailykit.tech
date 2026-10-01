@@ -4,7 +4,8 @@ import { useState } from "react";
 import { ScanText } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
-import { addTextLayer, type TextLayerWord } from "@/lib/pdf/edit";
+import type { TextLayerWord } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { renderPageCanvas } from "@/lib/pdf/pdf-render";
 import { pageFragments } from "@/lib/pdf/text";
 import { CheckboxField, SelectField } from "@/components/shared/form-fields";
@@ -89,7 +90,7 @@ function Ocr({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
         layers.push({ page: pages[i], words });
         texts.push(`--- Page ${pages[i]} ---\n${data.text.trim()}`);
       }
-      const out = await addTextLayer(pdf.bytes, layers);
+      const out = await (await pdfEdit()).addTextLayer(pdf.bytes, layers);
       const recognised = layers.reduce((n, l) => n + l.words.length, 0);
       setText(texts.join("\n\n"));
       setResult({

@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { applyStamps, isStandardFontText, type Stamp } from "@/lib/pdf/edit";
+import { isStandardFontText } from "@/lib/pdf/edit-helpers";
+import type { Stamp } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { textToPng } from "@/lib/pdf/browser";
 import { cn } from "@/lib/utils";
 import { PageView, pct, previewFontSize } from "./page-view";
@@ -191,5 +193,5 @@ export async function placedToStamps(items: Placed[]): Promise<Stamp[]> {
 }
 
 export async function applyPlaced(bytes: Uint8Array, items: Placed[]) {
-  return applyStamps(bytes, await placedToStamps(items));
+  return (await pdfEdit()).applyStamps(bytes, await placedToStamps(items));
 }

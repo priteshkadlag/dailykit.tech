@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
 import { IMAGE_MIMES, type AcceptedFile } from "@/lib/files/validation";
 import { imageToPng, textToPng } from "@/lib/pdf/browser";
-import { addPageNumbers, applyStamps, cropPages, formatPageNumber, isStandardFontText, MM, NUMBER_FORMATS, type NumberFormat, type NumberPosition, type Stamp } from "@/lib/pdf/edit";
+import { formatPageNumber, isStandardFontText, MM, NUMBER_FORMATS, type NumberFormat, type NumberPosition } from "@/lib/pdf/edit-helpers";
+import type { Stamp } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { renderPageCanvas } from "@/lib/pdf/pdf-render";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -178,7 +180,7 @@ function PageNumbers({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
         busy={busy}
         busyLabel="Adding numbers…"
         disabled={!!range.error}
-        onClick={() => run(setBusy, setResult, `${baseName(pdf.file)}-numbered.pdf`, () => addPageNumbers(pdf.bytes, { pages: range.pages, position, format, startAt: start, fontSize: size, marginPt }))}
+        onClick={() => run(setBusy, setResult, `${baseName(pdf.file)}-numbered.pdf`, async () => (await pdfEdit()).addPageNumbers(pdf.bytes, { pages: range.pages, position, format, startAt: start, fontSize: size, marginPt }))}
       >
         Add page numbers
       </ActionButton>
@@ -243,7 +245,7 @@ function Watermark({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
         }
       }
     }
-    return applyStamps(pdf.bytes, stamps);
+    return (await pdfEdit()).applyStamps(pdf.bytes, stamps);
   };
 
   const onPage = !range.error && range.pages.includes(page);
@@ -438,7 +440,7 @@ function Crop({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
         busy={busy}
         busyLabel="Cropping…"
         disabled={!!range.error || SIDES.every((s) => mm(s) === 0)}
-        onClick={() => run(setBusy, setResult, `${baseName(pdf.file)}-cropped.pdf`, () => cropPages(pdf.bytes, range.pages, { top: t, right: r, bottom: b, left: l }))}
+        onClick={() => run(setBusy, setResult, `${baseName(pdf.file)}-cropped.pdf`, async () => (await pdfEdit()).cropPages(pdf.bytes, range.pages, { top: t, right: r, bottom: b, left: l }))}
       >
         Crop PDF
       </ActionButton>

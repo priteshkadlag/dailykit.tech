@@ -6,7 +6,7 @@ import { toolMetadata } from "@/lib/seo";
 const slug = "aspect-ratio-calculator";
 const description = "Work out the exact crop, crop position and export size when turning a 16:9 YouTube video into a 9:16 Reel, TikTok or Short — or any other aspect ratio.";
 
-export const metadata = toolMetadata(slug, { title: "Aspect Ratio Calculator – Crop 16:9 to 9:16 for Reels, TikTok & Shorts", description });
+export const metadata = toolMetadata(slug, { title: "Aspect Ratio Calculator – 16:9 to 9:16 for Reels & Shorts", description });
 
 const faqs: Faq[] = [
   { question: "What size is a 9:16 video?", answer: "The standard 9:16 export size is 1080 × 1920 pixels, used by Instagram Reels, TikTok and YouTube Shorts." },

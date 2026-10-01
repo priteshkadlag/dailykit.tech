@@ -4,7 +4,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 import { toolMetadata } from "@/lib/seo";
 
 const slug = "unit-converter";
-const description = "Convert between units of length, weight, area, volume, temperature, speed, time, pressure, energy, power, fuel economy and angle — including Indian units like guntha, cent, gaj and tola.";
+const description = "Convert length, weight, area, volume, temperature, speed, pressure, energy and more — including Indian units like guntha, cent, gaj and tola.";
 export const metadata = toolMetadata(slug, { title: "Unit Converter – Length, Weight, Area, Temperature & More", description });
 const faqs: Faq[] = [
   { question: "Which units are supported?", answer: "Over 90 units in 12 groups: length, weight, area, volume, temperature, speed, time, pressure, energy, power, fuel economy and angle, in metric, imperial/US and common Indian units." },

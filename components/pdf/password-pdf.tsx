@@ -5,7 +5,7 @@ import { Eye, EyeOff, Lock, LockOpen } from "lucide-react";
 import { toast } from "sonner";
 import { track } from "@/lib/analytics/client";
 import { formatBytes, type AcceptedFile } from "@/lib/files/validation";
-import { isEncrypted, protectPdf, unlockPdf } from "@/lib/pdf/edit";
+import { pdfEdit } from "@/lib/pdf/lazy";
 import { openPdf } from "@/lib/pdf/pdf-render";
 import { Button } from "@/components/ui/button";
 import { CheckboxField, TextField } from "@/components/shared/form-fields";
@@ -52,7 +52,7 @@ function Protector({ pdf, reset }: { pdf: LoadedPdf; reset: () => void }) {
   const run = async () => {
     setBusy(true);
     try {
-      const bytes = await protectPdf(pdf.bytes, { password, allowPrinting: printing, allowCopying: copying, allowEditing: editing });
+      const bytes = await (await pdfEdit()).protectPdf(pdf.bytes, { password, allowPrinting: printing, allowCopying: copying, allowEditing: editing });
       setResult([{ name: `${baseName(pdf.file)}-protected.pdf`, blob: pdfBlob(bytes) }]);
       track("pdf_generated");
       toast.success("Your PDF is now password-protected.");
@@ -102,7 +102,7 @@ export function UnlockPdf() {
     setBusy(true);
     try {
       const bytes = new Uint8Array(await f.file.arrayBuffer());
-      if (!(await isEncrypted(bytes))) {
+      if (!(await (await pdfEdit()).isEncrypted(bytes))) {
         toast.info("This PDF isn't password-protected — there's nothing to unlock.");
         return;
       }
@@ -127,7 +127,7 @@ export function UnlockPdf() {
     setBusy(true);
     setError(undefined);
     try {
-      const bytes = await unlockPdf(file.bytes, file.restrictionsOnly ? "" : password);
+      const bytes = await (await pdfEdit()).unlockPdf(file.bytes, file.restrictionsOnly ? "" : password);
       setResult([{ name: `${baseName(file.file)}-unlocked.pdf`, blob: pdfBlob(bytes) }]);
       track("pdf_generated");
       toast.success("Password removed.");

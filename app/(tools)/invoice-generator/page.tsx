@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "invoice-generator";
 const description =
-  "Create professional GST and non-GST invoices with your logo, CGST/SGST/IGST, HSN codes, bank details and a UPI scan-to-pay QR. Download as PDF, print, and keep a record of every invoice.";
+  "Create GST and non-GST invoices with your logo, CGST/SGST/IGST, HSN codes, bank details and a UPI QR code. Download as PDF or print — free.";
 
 export const metadata = toolMetadata(slug, {
   title: "Free GST Invoice Generator – Create Invoice PDF Online",

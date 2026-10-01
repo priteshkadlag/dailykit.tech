@@ -6,7 +6,7 @@ import { toolMetadata } from "@/lib/seo";
 const slug = "video-bitrate-calculator";
 const description = "Find the video bitrate to set in OBS for Twitch or YouTube Live, based on your upload speed, resolution and frame rate — with audio, keyframe and CBR settings.";
 
-export const metadata = toolMetadata(slug, { title: "Video Bitrate Calculator for OBS – Twitch & YouTube Streaming", description });
+export const metadata = toolMetadata(slug, { title: "Video Bitrate Calculator for OBS, Twitch & YouTube", description });
 
 const faqs: Faq[] = [
   { question: "What bitrate should I use for 1080p 60fps?", answer: "Twitch recommends about 6,000 Kbps for 1080p at 60 fps, which is also its standard ingest limit. YouTube Live accepts 4,500–9,000 Kbps for 1080p60 with H.264. Your upload speed must be comfortably above the total, including audio." },

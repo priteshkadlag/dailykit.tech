@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Tool } from "@/lib/tools";
 import { Badge } from "@/components/ui/badge";
@@ -27,11 +26,11 @@ export function ToolCard({ tool, className }: { tool: Tool; className?: string }
       <div className="space-y-1">
         <h3 className="flex items-center gap-1 font-semibold">
           {tool.name}
+          {/* Text arrows, not SVG icons: these cards repeat hundreds of times on /tools and category pages. */}
           {live && (
-            <ArrowRight
-              className="size-4 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100"
-              aria-hidden
-            />
+            <span className="-translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" aria-hidden>
+              →
+            </span>
           )}
         </h3>
         <p className="text-sm leading-relaxed text-muted-foreground">{tool.shortDescription}</p>
@@ -43,7 +42,7 @@ export function ToolCard({ tool, className }: { tool: Tool; className?: string }
       </div>
       {live && (
         <span className="mt-auto inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-brand px-4 text-sm font-medium text-white shadow-sm shadow-blue-700/25 transition-[filter,box-shadow] group-hover:shadow-md group-hover:brightness-110">
-          Use Tool <ArrowRight className="size-4" aria-hidden />
+          Use Tool <span aria-hidden>→</span>
         </span>
       )}
     </>

@@ -5,10 +5,10 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "qr-code-generator";
 const description =
-  "Create QR codes for UPI payments, websites, WhatsApp, WiFi, phone, email and text. Choose colours, size and error correction, add your logo, and download as PNG or SVG — free, with no expiry.";
+  "Create QR codes for UPI, websites, WhatsApp, WiFi, phone, email and text. Pick colours, add your logo and download PNG or SVG — free, no expiry.";
 
 export const metadata = toolMetadata(slug, {
-  title: "QR Code Generator – UPI, WiFi, WhatsApp & URL QR Codes (Free)",
+  title: "QR Code Generator – UPI, WiFi, WhatsApp & URL (Free)",
   description,
 });
 

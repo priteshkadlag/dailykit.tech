@@ -5,7 +5,7 @@ import { PasswordGeneratorLoader } from "@/components/security/password-loader";
 
 const slug = "password-generator";
 const description =
-  "Generate strong, random passwords on your own device. Choose the length and character types, see the strength instantly, and copy with one tap. Passwords are never sent or stored.";
+  "Generate strong random passwords on your own device. Choose length and character types, check strength and copy in one tap. Never sent or stored.";
 
 export const metadata = toolMetadata(slug, {
   title: "Strong Password Generator – Secure Random Passwords",

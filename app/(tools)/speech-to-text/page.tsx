@@ -5,7 +5,7 @@ import { toolMetadata } from "@/lib/seo";
 
 const slug = "speech-to-text";
 const description = "Turn your voice into text online. Dictate in English, Hindi, Marathi, Gujarati, Tamil and other languages, then edit, copy or download the transcript.";
-export const metadata = toolMetadata(slug, { title: "Speech to Text – Online Voice Typing in English, Hindi & More", description });
+export const metadata = toolMetadata(slug, { title: "Speech to Text – Voice Typing in English, Hindi & More", description });
 const faqs: Faq[] = [
   { question: "Which browsers work?", answer: "Google Chrome, Microsoft Edge and Safari. Firefox doesn't support speech recognition yet." },
   { question: "Which languages can I dictate in?", answer: "English (India, US, UK), Hindi, Marathi, Gujarati, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Nepali and several international languages." },

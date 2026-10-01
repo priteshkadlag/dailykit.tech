@@ -4,7 +4,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 import { toolMetadata } from "@/lib/seo";
 
 const slug = "random-picker";
-const description = "Spin a wheel of names to pick a random winner, pick several entries at once, or shuffle a list — fair, random and free for classrooms, giveaways and lucky draws.";
+const description = "Spin a wheel of names to pick a random winner, pick several entries at once, or shuffle a list — fair and free for classrooms and giveaways.";
 export const metadata = toolMetadata(slug, { title: "Random Picker & Wheel Spinner – Spin the Wheel Online", description });
 const faqs: Faq[] = [
   { question: "Is the wheel really random?", answer: "Yes. The winner is chosen with your browser's cryptographic random number generator before the wheel spins, so every entry has exactly the same chance." },

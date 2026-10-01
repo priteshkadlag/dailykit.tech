@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { categories, getPdfToolsByGroup, getToolsInCategory, tools } from "@/lib/tools";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { SearchForm } from "@/components/shared/search-form";
 import { CategoryTools } from "@/components/shared/tool-card";
 
-export const metadata: Metadata = {
-  title: "All Tools – Calculators, Business, PDF & Image Tools",
+export const metadata: Metadata = pageMetadata("/tools", {
+  title: "All Free Tools – Calculators, PDF, Image & More",
   description: "Browse every free tool: GST, EMI, discount, percentage and age calculators, invoice and quotation generators, PDF, image and QR tools.",
-  alternates: { canonical: "/tools" },
-};
+});
 
 export default function ToolsPage() {
   const sections = categories.filter((c) => c.slug !== "calculators");

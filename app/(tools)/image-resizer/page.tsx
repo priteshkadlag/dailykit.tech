@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "image-resizer";
 const description =
-  "Resize photos to exact pixel dimensions or one-click presets for Instagram, YouTube thumbnails, Facebook, passport photos and A4. Crop to fill, fit with a background, or stretch — right in your browser.";
+  "Resize photos to exact pixels or one-click presets for Instagram, YouTube, passport photos and A4. Crop, fit or stretch — right in your browser.";
 
 export const metadata = toolMetadata(slug, {
   title: "Image Resizer – Resize Photos for Instagram, Passport & More",

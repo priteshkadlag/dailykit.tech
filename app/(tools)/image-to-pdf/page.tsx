@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "image-to-pdf";
 const description =
-  "Combine JPG, PNG and WEBP images into one PDF. Reorder pages, choose A4, A5, Letter or original size, set orientation, margins and quality — all in your browser, with no upload.";
+  "Combine JPG, PNG and WEBP images into one PDF. Reorder pages, pick A4, Letter or original size, margins and quality — in your browser, no upload.";
 
 export const metadata = toolMetadata(slug, {
   title: "Image to PDF Converter – JPG, PNG to PDF Free (No Upload)",

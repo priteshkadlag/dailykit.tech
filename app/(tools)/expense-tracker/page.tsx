@@ -5,7 +5,7 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "expense-tracker";
 const description =
-  "Record daily personal and business expenses by category and payment method. See today's, this week's and this month's spending, category and trend charts, and export to CSV or a PDF report.";
+  "Record daily personal and business expenses by category and payment method. See spending charts by day, week and month, and export to CSV or PDF.";
 
 export const metadata = toolMetadata(slug, {
   title: "Daily Expense Tracker – Track Spending with Charts & Reports",

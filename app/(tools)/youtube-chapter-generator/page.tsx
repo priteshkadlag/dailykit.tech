@@ -6,7 +6,7 @@ import { toolMetadata } from "@/lib/seo";
 const slug = "youtube-chapter-generator";
 const description = "Turn a rough list of timestamps into correctly formatted YouTube chapters, and check the rules YouTube needs before it shows them on your video.";
 
-export const metadata = toolMetadata(slug, { title: "YouTube Chapter Generator – Format Timestamps for Video Chapters", description });
+export const metadata = toolMetadata(slug, { title: "YouTube Chapter Generator – Timestamps for Chapters", description });
 
 const faqs: Faq[] = [
   { question: "Why aren't my YouTube chapters showing?", answer: "YouTube only shows chapters when the list in your description starts at 0:00, has at least three timestamps in increasing order, and every chapter is at least 10 seconds long. The generator checks all three." },

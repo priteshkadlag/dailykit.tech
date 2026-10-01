@@ -4,7 +4,7 @@ import { useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CornerDownLeft, Search } from "lucide-react";
-import { searchTools } from "@/lib/search";
+import type { searchTools } from "@/lib/search";
 import { cn } from "@/lib/utils";
 import { ToolIcon } from "@/components/shared/tool-icon";
 
@@ -18,7 +18,12 @@ export function FooterSearch() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
-  const results = useMemo(() => (query.trim() ? searchTools(query, 6) : []), [query]);
+  // The search index (the whole tool registry) is fetched when the box is first focused, not on every page load.
+  const [search, setSearch] = useState<typeof searchTools | null>(null);
+  const loadSearch = () => {
+    if (!search) void import("@/lib/search").then((m) => setSearch(() => m.searchTools));
+  };
+  const results = useMemo(() => (search && query.trim() ? search(query, 6) : []), [search, query]);
   const showList = open && query.trim().length > 0;
 
   const go = (href: string) => {
@@ -59,8 +64,8 @@ export function FooterSearch() {
             aria-activedescendant={showList && results[active] ? `${id}-opt-${active}` : undefined}
             autoComplete="off"
             value={query}
-            onChange={(e) => { setQuery(e.target.value); setActive(0); setOpen(true); }}
-            onFocus={() => setOpen(true)}
+            onChange={(e) => { loadSearch(); setQuery(e.target.value); setActive(0); setOpen(true); }}
+            onFocus={() => { loadSearch(); setOpen(true); }}
             onBlur={() => window.setTimeout(() => setOpen(false), 150)}
             onKeyDown={onKeyDown}
             placeholder="Search tools — GST, PDF, Hindi, JSON…"

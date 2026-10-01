@@ -5,10 +5,10 @@ import { ToolPage } from "@/components/shared/tool-page";
 
 const slug = "emi-calculator";
 const description =
-  "Calculate the monthly EMI for a home, car or personal loan. See total interest, total payment, a principal vs interest chart and the full month-by-month amortization schedule.";
+  "Calculate monthly EMI for a home, car or personal loan. See total interest, a principal vs interest chart and the full month-by-month amortization schedule.";
 
 export const metadata = toolMetadata(slug, {
-  title: "EMI Calculator – Home, Car & Personal Loan EMI with Amortization",
+  title: "EMI Calculator – Home, Car & Personal Loan EMI Schedule",
   description,
 });
 

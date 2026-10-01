@@ -5,7 +5,7 @@ import { TaskManagerLoader } from "@/components/tasks/task-loader";
 
 const slug = "task-manager";
 const description =
-  "Plan your day with a simple to-do list: due dates and times, priorities, categories and reminders. See today's, upcoming, overdue and completed tasks at a glance.";
+  "Plan your day with a simple to-do list: due dates, priorities, categories and reminders. See today's, upcoming, overdue and done tasks at a glance.";
 
 export const metadata = toolMetadata(slug, {
   title: "Daily Task Manager & Reminder – Simple To-Do List",
