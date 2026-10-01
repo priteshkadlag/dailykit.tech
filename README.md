@@ -167,4 +167,5 @@ The sitemap, search, navigation and related-tool links pick it up automatically.
 - GST quick-pick rates include the post-September-2025 slabs (5/18/40) as well as 12/28 for earlier invoices.
 - The brand name lives in `lib/site.ts` (`siteConfig.name`) — change it there.
 #   d a i l y k i t . t e c h  
+ #   d a i l y k i t . t e c h  
  
