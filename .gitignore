@@ -42,6 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 # generated from pdfjs-dist by scripts/copy-pdf-worker.mjs
+/public/pdf.worker.min.js
 /public/pdf.worker.min.mjs
 
 # prisma client

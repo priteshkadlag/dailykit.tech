@@ -10,10 +10,13 @@ export interface OpenedPdf {
   destroy: () => Promise<void>;
 }
 
-/** Open a PDF in the browser with pdf.js. The worker is served from /public (see scripts/copy-pdf-worker.mjs). */
+/**
+ * Open a PDF in the browser with pdf.js. The worker is served from /public (see scripts/copy-pdf-worker.mjs)
+ * with a .js extension: some hosts (e.g. Hostinger) serve .mjs as text/plain, which browsers refuse to run.
+ */
 export async function openPdf(file: Blob, password?: string): Promise<OpenedPdf> {
   const pdfjs = await import("pdfjs-dist");
-  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
   const task = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()), password });
   try {
     return { doc: await task.promise, destroy: () => task.destroy() };
