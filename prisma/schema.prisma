@@ -1,0 +1,406 @@
+// DailyKit database schema (PostgreSQL).
+//
+// Isolation rule: every user-owned row carries `userId`, and rows are addressed by
+// (userId, clientId). The browser generates `clientId` so records keep a stable id while
+// offline; because it is only unique *per user*, a client can never name another user's row.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  /// bcrypt hash; null for accounts that only sign in with Google.
+  passwordHash  String?
+  role          Role      @default(USER)
+  /// Bumped on password change/reset to invalidate every existing session.
+  sessionVersion Int      @default(0)
+  lastActiveAt  DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts         Account[]
+  passwordResets   PasswordResetToken[]
+  businessProfile  BusinessProfile?
+  settings         UserSettings?
+  invoices         Invoice[]
+  quotations       Quotation[]
+  expenses         Expense[]
+  tasks            Task[]
+  calculations     SavedCalculation[]
+  favoriteTools    FavoriteTool[]
+  subscriptions    Subscription[]
+  payments         Payment[]
+  activity         UserActivity[]
+  blogPosts        BlogPost[]
+}
+
+/// Linked OAuth identities (Google today).
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  /// SHA-256 of the token sent by email — the raw token is never stored.
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model BusinessProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  businessName   String   @default("")
+  /// Downscaled image data URL (validated and size-capped on write).
+  logo           String   @default("")
+  address        String   @default("")
+  phone          String   @default("")
+  email          String   @default("")
+  gstin          String   @default("")
+  pan            String   @default("")
+  accountName    String   @default("")
+  bankName       String   @default("")
+  accountNumber  String   @default("")
+  ifsc           String   @default("")
+  upiId          String   @default("")
+  invoiceTerms   String   @default("")
+  quotationTerms String   @default("")
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserSettings {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  /// Opt out of anonymous usage analytics on every device this account signs in on.
+  analyticsOptOut  Boolean  @default(false)
+  /// Reminder emails — ready for the email channel of the task reminders.
+  emailReminders   Boolean  @default(false)
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  userId        String
+  clientId      String
+  number        String
+  date          String
+  dueDate       String
+  status        String
+  template      String
+  taxMode       String
+  supply        String
+  placeOfSupply String
+  roundOff      Boolean
+  /// Snapshot of the seller as printed on this invoice (the profile may change later).
+  seller        Json
+  customerName  String
+  customer      Json
+  bank          Json
+  notes         String
+  terms         String
+  /// Server-computed from the items, used for dashboards.
+  grandTotal    Decimal  @db.Decimal(14, 2)
+  clientCreatedAt DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items InvoiceItem[]
+
+  @@unique([userId, clientId])
+  @@index([userId, createdAt])
+}
+
+model InvoiceItem {
+  id        String  @id @default(cuid())
+  invoiceId String
+  position  Int
+  clientId  String
+  name      String
+  sku       String
+  hsn       String
+  qty       String
+  unit      String
+  rate      String
+  discount  String
+  gstRate   String
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId, position])
+}
+
+model Quotation {
+  id            String   @id @default(cuid())
+  userId        String
+  clientId      String
+  number        String
+  date          String
+  /// "Valid until".
+  dueDate       String
+  status        String
+  template      String
+  taxMode       String
+  supply        String
+  placeOfSupply String
+  roundOff      Boolean
+  seller        Json
+  customerName  String
+  customer      Json
+  bank          Json
+  notes         String
+  terms         String
+  grandTotal    Decimal  @db.Decimal(14, 2)
+  clientCreatedAt DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items QuotationItem[]
+
+  @@unique([userId, clientId])
+  @@index([userId, createdAt])
+}
+
+model QuotationItem {
+  id          String @id @default(cuid())
+  quotationId String
+  position    Int
+  clientId    String
+  name        String
+  sku         String
+  hsn         String
+  qty         String
+  unit        String
+  rate        String
+  discount    String
+  gstRate     String
+
+  quotation Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId, position])
+}
+
+model Expense {
+  id        String   @id @default(cuid())
+  userId    String
+  clientId  String
+  amount    Decimal  @db.Decimal(14, 2)
+  category  String
+  date      String
+  method    String
+  note      String
+  clientCreatedAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId, date])
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  userId      String
+  clientId    String
+  title       String
+  description String
+  dueDate     String
+  dueTime     String
+  priority    String
+  category    String
+  reminder    String
+  completed   Boolean
+  completedAt DateTime?
+  remindedAt  DateTime?
+  clientCreatedAt DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId, completed])
+}
+
+/// A calculator result the user chose to keep ("Recent calculations").
+model SavedCalculation {
+  id        String   @id @default(cuid())
+  userId    String
+  clientId  String
+  toolSlug  String
+  title     String
+  /// Plain-text summary exactly as shown/copied in the tool.
+  summary   String
+  /// Link back to the tool with the inputs, when the tool supports it.
+  url       String
+  clientCreatedAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId, createdAt])
+}
+
+model FavoriteTool {
+  id        String   @id @default(cuid())
+  userId    String
+  toolSlug  String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolSlug])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+/// One row per paid (or admin-granted) period of Pro. The current plan is derived from these.
+model Subscription {
+  id                String             @id @default(cuid())
+  userId            String
+  plan              Plan
+  /// "monthly" | "yearly"
+  interval          String
+  status            SubscriptionStatus @default(ACTIVE)
+  /// "manual" (granted by an admin) today; "razorpay" / "stripe" once a gateway is connected.
+  provider          String
+  providerRef       String?
+  currentPeriodEnd  DateTime
+  cancelledAt       DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@unique([provider, providerRef])
+  @@index([userId, status])
+}
+
+model Payment {
+  id             String   @id @default(cuid())
+  userId         String
+  subscriptionId String?
+  /// Paise.
+  amount         Int
+  currency       String   @default("INR")
+  status         String
+  provider       String
+  providerRef    String?
+  createdAt      DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  @@unique([provider, providerRef])
+  @@index([createdAt])
+}
+
+/// Anonymous tool-usage events. No user id, no inputs — only which tool and what kind of action.
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  name      String
+  toolSlug  String?
+  /// Random per-browser id (not linked to accounts) so daily/monthly active visitors can be counted.
+  visitorId String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([name, createdAt])
+  @@index([toolSlug, createdAt])
+}
+
+/// One row per signed-in user per active day — powers DAU/MAU for accounts.
+model UserActivity {
+  userId String
+  day    DateTime @db.Date
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, day])
+  @@index([day])
+}
+
+/// Fixed-window rate-limit counters. Keys are hashed (no raw IPs or emails are stored).
+model RateLimit {
+  key         String   @id
+  count       Int
+  windowStart DateTime
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+}
+
+/// Blog articles written in the admin editor. (Built-in editorial guides live in lib/blog.ts.)
+model BlogPost {
+  id           String     @id @default(cuid())
+  slug         String     @unique
+  title        String
+  /// Meta description for search results and link previews.
+  description  String
+  /// Short summary shown on cards and under the headline.
+  excerpt      String
+  category     String
+  /// Markdown body.
+  content      String
+  tags         String[]
+  /// Slugs of related tools from lib/tools.ts.
+  relatedTools String[]
+  featured     Boolean    @default(false)
+  status       BlogStatus @default(DRAFT)
+  publishedAt  DateTime?
+  authorId     String?
+  author       User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([status, publishedAt])
+}
