@@ -7,6 +7,8 @@ import { ToolCard } from "@/components/shared/tool-card";
 import { ToolIcon } from "@/components/shared/tool-icon";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { TrackOnce } from "@/components/shared/track";
+import { AdSlot } from "@/components/ads/ad-slot";
+import { AD_SLOTS } from "@/lib/ads";
 
 interface ToolPageProps {
   slug: string;
@@ -48,6 +50,8 @@ export function ToolPage({ slug, heading, description, faqs, guide, children }: 
 
       {children}
 
+      <AdSlot slot={AD_SLOTS.inContent} />
+
       {guide && <section className="prose-section max-w-3xl space-y-4 text-[0.95rem] leading-relaxed">{guide}</section>}
 
       <div className="max-w-3xl">
@@ -66,6 +70,8 @@ export function ToolPage({ slug, heading, description, faqs, guide, children }: 
           </div>
         </section>
       )}
+
+      <AdSlot slot={AD_SLOTS.multiplex} format="autorelaxed" />
 
       <JsonLd data={toolJsonLd(slug, description)} />
       <TrackOnce event="tool_opened" />

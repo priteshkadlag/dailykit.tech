@@ -227,6 +227,11 @@ body::after {
   color: #fff;
 }
 
+/* AdSense slots (components/ads/ad-slot.tsx): collapse when Google has no ad to show. */
+@layer components {
+  .ad-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]) { display: none; }
+}
+
 /* Articles written in the blog editor (Markdown → HTML). */
 @layer components {
   .blog-content { @apply space-y-5 leading-relaxed text-muted-foreground; }

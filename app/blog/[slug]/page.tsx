@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Clock3 } from "lucide-react";
 import { BlogCard } from "@/components/blog/blog-card";
+import { AdSlot } from "@/components/ads/ad-slot";
+import { AD_SLOTS } from "@/lib/ads";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { JsonLd } from "@/components/shared/json-ld";
 import { FaqSection } from "@/components/shared/faq-section";
@@ -51,11 +53,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {post.sections.map((section) => <section key={section.heading} className="space-y-4"><h2>{section.heading}</h2>{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}{section.bullets && <ul>{section.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}</section>)}
           {post.comparison && <section className="space-y-4"><h2>Comparison table</h2><div className="overflow-x-auto rounded-xl border"><table className="w-full min-w-[36rem] text-left text-sm"><thead className="bg-muted"> <tr>{post.comparison.headers.map((header) => <th key={header} scope="col" className="px-4 py-3 font-semibold text-foreground">{header}</th>)}</tr></thead><tbody className="divide-y">{post.comparison.rows.map((row) => <tr key={row.join("-")}>{row.map((cell, index) => <td key={`${cell}-${index}`} className="px-4 py-3 text-muted-foreground">{cell}</td>)}</tr>)}</tbody></table></div></section>}
         </div>
+        <AdSlot slot={AD_SLOTS.inContent} className="mb-9" />
         {post.faqs && <div className="mb-9"><FaqSection faqs={post.faqs} title={`${post.focusKeyword ?? post.title}: frequently asked questions`} /></div>}
         <aside aria-labelledby="related-tools-heading" className="rounded-2xl border bg-card p-5 sm:p-6"><h2 id="related-tools-heading" className="text-lg font-semibold">Put this guide into practice</h2><p className="mt-1 text-sm text-muted-foreground">Try the related DailyKit tools.</p><div className="mt-4 flex flex-wrap gap-3">{post.relatedTools.map((tool) => <Link key={tool.href} href={tool.href} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-medium text-white shadow-sm hover:brightness-110">{tool.name}<ArrowRight className="size-4" aria-hidden /></Link>)}</div></aside>
         <Link href="/blog" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-primary"><ArrowLeft className="size-4" aria-hidden />Back to all articles</Link>
       </article>
       {related.length > 0 && <section aria-labelledby="related-articles-heading" className="mt-16 space-y-6"><h2 id="related-articles-heading" className="text-2xl font-bold tracking-tight">Related articles</h2><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{related.map((item) => <BlogCard key={item.slug} post={item} />)}</div></section>}
+      <AdSlot slot={AD_SLOTS.multiplex} format="autorelaxed" className="mt-16" />
       <JsonLd data={{ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.description, datePublished: post.publishedAt, dateModified: post.updatedAt ?? post.publishedAt, mainEntityOfPage: url, url, articleSection: category.name, author: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, publisher: { "@id": `${siteConfig.url}#organization` }, keywords: [post.focusKeyword, ...(post.relatedKeywords ?? [])].filter(Boolean).join(", ") }} />
     </div>
   );
@@ -101,13 +105,15 @@ async function DbPostView({ post }: { post: DbBlogPost }) {
           </nav>
         )}
         <div className="blog-content py-9" dangerouslySetInnerHTML={{ __html: html }} />
+        <AdSlot slot={AD_SLOTS.inContent} className="mb-9" />
         {post.relatedTools.length > 0 && (
           <aside aria-labelledby="related-tools-heading" className="rounded-2xl border bg-card p-5 sm:p-6"><h2 id="related-tools-heading" className="text-lg font-semibold">Put this guide into practice</h2><p className="mt-1 text-sm text-muted-foreground">Try the related DailyKit tools.</p><div className="mt-4 flex flex-wrap gap-3">{post.relatedTools.map((tool) => <Link key={tool.href} href={tool.href} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-medium text-white shadow-sm hover:brightness-110">{tool.name}<ArrowRight className="size-4" aria-hidden /></Link>)}</div></aside>
         )}
         <Link href="/blog" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-primary"><ArrowLeft className="size-4" aria-hidden />Back to all articles</Link>
       </article>
       {related.length > 0 && <section aria-labelledby="related-articles-heading" className="mt-16 space-y-6"><h2 id="related-articles-heading" className="text-2xl font-bold tracking-tight">Related articles</h2><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{related.map((item) => <BlogCard key={item.slug} post={item} />)}</div></section>}
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.description, datePublished: post.publishedAt, dateModified: post.updatedAt, mainEntityOfPage: url, url, articleSection: category.name, author: post.authorName ? { "@type": "Person", name: post.authorName } : { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, publisher: { "@id": `${siteConfig.url}#organization` }, keywords: post.tags.join(", ") }} />
+      <AdSlot slot={AD_SLOTS.multiplex} format="autorelaxed" className="mt-16" />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.description, datePublished: post.publishedAt, dateModified: post.updatedAt,mainEntityOfPage: url, url, articleSection: category.name, author: post.authorName ? { "@type": "Person", name: post.authorName } : { "@type": "Organization", name: siteConfig.name, url: siteConfig.url }, publisher: { "@id": `${siteConfig.url}#organization` }, keywords: post.tags.join(", ") }} />
     </div>
   );
 }
